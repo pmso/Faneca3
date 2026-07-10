@@ -4,6 +4,6 @@
 
 #include "AppState.h"
 #include "Menu.h"
-#include "ClockApp.h"
-#include "WifiApp.h"
+#include "FunkySSIDApp.h"
+#include "MorseCodeApp.h"
 #include "SettingsApp.h"

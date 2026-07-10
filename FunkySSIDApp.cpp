@@ -1,16 +1,12 @@
-#include "FunkySSID.h"
+#include "FunkySSIDApp.h"
 
-const char* ssidList[] =
+const SSIDItem ssidList[] =
 {
-    "FBI Surveillance Van",
-    "Pretty Fly For A WiFi",
-    "Skynet",
-    "Loading Virus...",
-    "Free Pizza",
-    "LAN Solo",
-    "Hack Me If You Can",
-    "404 Network Unavailable",
-    "Definitely Not Malware"
+    { "FBI Surveillance Van", "" },
+    { "Pretty Fly For A WiFi", "" },
+    { "Free Pizza", "12345678" },
+    { "Skynet", "judgementday" },
+    { "Definitely Not Malware", "" }
 };
 
 const uint8_t SSID_COUNT = sizeof(ssidList) / sizeof(ssidList[0]);
@@ -31,7 +27,7 @@ void DrawScreen()
     if (!apRunning)
     {
         M5.Display.println();
-        M5.Display.printf("> %s\n", ssidList[selectedSSID]);
+        M5.Display.printf("> %s\n", ssidList[selectedSSID].ssid);
 
         M5.Display.println();
         M5.Display.println("BtnA  Next");
@@ -43,7 +39,7 @@ void DrawScreen()
         M5.Display.println("Broadcasting:");
 
         M5.Display.println();
-        M5.Display.println(ssidList[selectedSSID]);
+        M5.Display.println(ssidList[selectedSSID].ssid);
 
         M5.Display.println();
         M5.Display.print("IP: ");
@@ -61,12 +57,22 @@ void FunkySSIDSetup()
 
 void StartAP()
 {
+    const SSIDItem& item = ssidList[selectedSSID];
+
     WiFi.mode(WIFI_AP);
 
-    if (WiFi.softAP(ssidList[selectedSSID]))
+    bool ok;
+
+    if (strlen(item.password) == 0)
     {
-        apRunning = true;
+        ok = WiFi.softAP(item.ssid);
     }
+    else
+    {
+        ok = WiFi.softAP(item.ssid, item.password);
+    }
+
+    apRunning = ok;
 }
 
 void StopAP()
